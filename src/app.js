@@ -29,8 +29,6 @@ app.put("/repositories/:id", (request, response) => {
   const { id } = request.params;
   const { title, url, techs } = request.body;
 
-  if(request.body.likes) return response.status(400).json({error:"Cannot update likes manually"});
-  
   const index = repositories.findIndex((r)=>r.id === id);
 
   if(index<0) return response.status(400).json({error:"ID not found"});
@@ -67,9 +65,11 @@ app.post("/repositories/:id/like", (request, response) => {
   const index = repositories.findIndex(r=>r.id===id);
   if(index<0) return response.status(400).json({error:"ID not found"});
 
-  repositories[index].likes++;
 
-  return response.status(204).json();
+  const rep = repositories[index];
+  rep.likes++;
+
+  return response.json(rep);
 });
 
 module.exports = app;
